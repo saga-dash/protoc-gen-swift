@@ -11,6 +11,7 @@ docker run --rm\
  -v $(pwd):$(pwd) -w $(pwd)\
  sagadash/protoc-gen-swift\
  --swift_opt=Visibility=Public\
+ --swiftgrpc_opt=Visibility=Public\
  --swift_out=models --swiftgrpc_out=models\
  -Iproto proto/**/*.proto
 ```
