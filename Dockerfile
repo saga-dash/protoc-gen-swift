@@ -87,6 +87,10 @@ RUN apk add --no-cache curl && \
         for f in annotations http; do \
             curl -L -o /protobuf/google/api/${f}.proto https://raw.githubusercontent.com/grpc-ecosystem/grpc-gateway/master/third_party/googleapis/google/api/${f}.proto; \
         done && \
+    mkdir -p /protobuf/google/pubsub/v1 && \
+        for f in pubsub; do \
+            curl -L -o /protobuf/google/pubsub/v1/${f}.proto https://raw.githubusercontent.com/googleapis/googleapis/master/google/pubsub/v1/${f}.proto; \
+        done && \
     apk del curl
 
 ENTRYPOINT ["/usr/bin/protoc", "-I/protobuf"]
