@@ -91,6 +91,10 @@ RUN apk add --no-cache curl && \
         for f in pubsub; do \
             curl -L -o /protobuf/google/pubsub/v1/${f}.proto https://raw.githubusercontent.com/googleapis/googleapis/master/google/pubsub/v1/${f}.proto; \
         done && \
+    mkdir -p /protobuf/google/pubsub/v1beta2 && \
+        for f in pubsub; do \
+            curl -L -o /protobuf/google/pubsub/v1beta2/${f}.proto https://raw.githubusercontent.com/googleapis/googleapis/master/google/pubsub/v1beta2/${f}.proto; \
+        done && \
     apk del curl
 
 ENTRYPOINT ["/usr/bin/protoc", "-I/protobuf"]
