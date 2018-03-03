@@ -46,7 +46,7 @@ RUN apt-get install -y automake libtool autoconf tzdata curl libcurl4-openssl-de
 
 ENV SWIFT_PROTOBUF_VERSION=0.3.2
 # Build and install the swiftgrpc plugin
-RUN git clone -b master-alt https://github.com/novi/grpc-swift && \
+RUN git clone -b dev https://github.com/novi/grpc-swift && \
     cd grpc-swift/Plugin && \
     make && \
     cp protoc-gen-swift /usr/bin && \
