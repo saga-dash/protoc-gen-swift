@@ -49,17 +49,22 @@ ENV SWIFT_PROTOBUF_VERSION=0.3.2
 RUN git clone -b dev https://github.com/novi/grpc-swift && \
     cd grpc-swift/Plugin && \
     make && \
-    cp protoc-gen-swift /usr/bin && \
-    cp protoc-gen-swiftgrpc /usr/bin
+    cp .build/x86_64-unknown-linux/debug/protoc-gen-swift /usr/bin && \
+    cp .build/x86_64-unknown-linux/debug/protoc-gen-swiftgrpc /usr/bin
+RUN git clone -b validator https://github.com/saga-dash/swift-protobuf && \
+    cd swift-protobuf && \
+    make && \
+    cp .build/x86_64-unknown-linux/debug/protoc-gen-swiftvalidators /usr/bin
 
 RUN mkdir -p /protoc-gen-swift && \
     cp /grpc-swift/Plugin/.build/x86_64-unknown-linux/debug/protoc-gen-swift /protoc-gen-swift/ && \
-    cp /grpc-swift/Plugin/.build/x86_64-unknown-linux/debug/protoc-gen-swiftgrpc /protoc-gen-swift/ 
+    cp /grpc-swift/Plugin/.build/x86_64-unknown-linux/debug/protoc-gen-swiftgrpc /protoc-gen-swift/ \
+    cp /swift-protobuf/.build/x86_64-unknown-linux/debug/protoc-gen-swiftvalidators /protoc-gen-swift/
 RUN cp /lib64/ld-linux-x86-64.so.2 \
         $(ldd /protoc-gen-swift/protoc-gen-swift | awk '{print $3}' | grep /lib | sort | uniq) \
         /protoc-gen-swift/
 RUN find /protoc-gen-swift/ -name 'lib*.so*' -exec patchelf --set-rpath /protoc-gen-swift {} \; && \
-    for p in protoc-gen-swift protoc-gen-swiftgrpc; do \
+    for p in protoc-gen-swift protoc-gen-swiftgrpc protoc-gen-swiftvalidators; do \
         patchelf --set-interpreter /protoc-gen-swift/ld-linux-x86-64.so.2 /protoc-gen-swift/${p}; \
     done
 
@@ -74,7 +79,7 @@ FROM alpine:3.7
 RUN apk add --no-cache libstdc++
 COPY --from=packer /out/ /
 COPY --from=swift_builder /protoc-gen-swift /protoc-gen-swift
-RUN for p in protoc-gen-swift protoc-gen-swiftgrpc; do \
+RUN for p in protoc-gen-swift protoc-gen-swiftgrpc protoc-gen-swiftvalidators; do \
         ln -s /protoc-gen-swift/${p} /usr/bin/${p}; \
     done
 
