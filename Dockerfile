@@ -22,23 +22,7 @@ RUN cd /grpc && \
 RUN find ${OUTDIR} -name "*.a" -delete -or -name "*.la" -delete
 
 
-FROM ubuntu:16.04 as swift_builder
-RUN apt-get update && \
-    apt-get install -y build-essential make tar xz-utils bzip2 gzip sed \
-    libz-dev unzip patchelf curl libedit-dev python2.7 python2.7-dev libxml2 \
-    git libxml2-dev uuid-dev libssl-dev bash patch
-ENV SWIFT_VERSION=4.0.3 \
-    LLVM_VERSION=5.0.1
-RUN curl -L http://releases.llvm.org/${LLVM_VERSION}/clang+llvm-${LLVM_VERSION}-x86_64-linux-gnu-ubuntu-16.04.tar.xz | tar --strip-components 1 -C /usr/local/ -xJv
-RUN curl -L https://swift.org/builds/swift-${SWIFT_VERSION}-release/ubuntu1604/swift-${SWIFT_VERSION}-RELEASE/swift-${SWIFT_VERSION}-RELEASE-ubuntu16.04.tar.gz | tar --strip-components 1 -C / -xz
-
-# Add MariaDB repository
-RUN apt-get install -y software-properties-common && \
-    apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8 && \
-    add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://ftp.yz.yamagata-u.ac.jp/pub/dbms/mariadb/repo/10.1/ubuntu xenial main'
-
-# 
-RUN ln -fs /usr/share/zoneinfo/Etc/GMT /etc/localtime
+FROM swift:4.0.3 as swift_builder
 
 # Install dependency library
 RUN apt-get install -y automake libtool autoconf tzdata curl libcurl4-openssl-dev && \
