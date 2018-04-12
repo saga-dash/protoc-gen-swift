@@ -28,13 +28,12 @@ FROM swift:4.0.3 as swift_builder
 RUN apt-get install -y automake libtool autoconf tzdata curl libcurl4-openssl-dev && \
     apt-get clean
 
-ENV SWIFT_PROTOBUF_VERSION=0.3.2
 # Build and install the swiftgrpc plugin
 RUN git clone -b dev https://github.com/novi/grpc-swift && \
-    cd grpc-swift/Plugin && \
-    make && \
-    cp .build/x86_64-unknown-linux/debug/protoc-gen-swift /usr/bin && \
-    cp .build/x86_64-unknown-linux/debug/protoc-gen-swiftgrpc /usr/bin
+    cd grpc-swift && \
+    make all && \
+    cp .build/debug/protoc-gen-swift /usr/bin && \
+    cp .build/debug/protoc-gen-swiftgrpc /usr/bin
 RUN git clone https://github.com/saga-dash/swift-protobuf-validator && \
     cd swift-protobuf-validator && \
     make && \
