@@ -26,7 +26,7 @@ FROM swift:4.0.3 as swift_builder
 
 # Install dependency library
 RUN apt-get update && \
-    apt-get install -y automake libtool autoconf tzdata curl libcurl4-openssl-dev && \
+    apt-get install -y automake libtool autoconf tzdata curl libcurl4-openssl-dev patchelf && \
     apt-get clean
 
 # Build and install the swiftgrpc plugin
